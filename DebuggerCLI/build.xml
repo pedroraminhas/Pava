@@ -1,0 +1,29 @@
+<project>
+
+    <target name="init">
+            <mkdir dir="build/classes" />
+        </target>
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/classes"/>
+        <javac includeantruntime="false" srcdir="src/ist/meic/pa" destdir="build/classes" classpath="lib/javassist.jar"/>
+    </target>
+
+    <target name="jar">
+        <mkdir dir="build/jar"/>
+        <jar destfile="build/jar/debugger.jar" basedir="build/classes">
+            <manifest>
+                <attribute name="Main-Class" value="DebuggerCLI"/>
+            </manifest>
+        </jar>
+    </target>
+
+      <target name="run">
+        <java jar="build/jar/debugger.jar" fork="true"/>
+    </target>
+
+</project>
