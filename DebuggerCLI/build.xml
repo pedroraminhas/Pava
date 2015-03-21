@@ -1,15 +1,11 @@
 <project>
 
-    <target name="init">
-            <mkdir dir="build/classes" />
-        </target>
-
     <target name="clean">
-        <delete dir="build"/>
+        <delete dir="classes"/>
     </target>
 
     <target name="compile">
-        <mkdir dir="classes"/>
+    	 <mkdir dir="classes" />
         <javac includeantruntime="false" srcdir="src" destdir="classes" classpath="lib/javassist.jar"/>
     </target>
 
