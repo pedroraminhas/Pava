@@ -9,21 +9,22 @@
     </target>
 
     <target name="compile">
-        <mkdir dir="build/classes"/>
-        <javac includeantruntime="false" srcdir="src/ist/meic/pa" destdir="build/classes" classpath="lib/javassist.jar"/>
+        <mkdir dir="classes"/>
+        <javac includeantruntime="false" srcdir="src" destdir="classes" classpath="lib/javassist.jar"/>
     </target>
 
     <target name="jar">
         <mkdir dir="build/jar"/>
         <jar destfile="build/jar/debugger.jar" basedir="build/classes">
             <manifest>
-                <attribute name="Main-Class" value="DebuggerCLI"/>
+                <attribute name="Main-Class" value="debugger"/>
             </manifest>
         </jar>
     </target>
 
-      <target name="run">
+    <target name="run">
         <java jar="build/jar/debugger.jar" fork="true"/>
     </target>
 
 </project>
+
