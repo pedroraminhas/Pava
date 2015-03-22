@@ -37,5 +37,5 @@
     <target name="clean-build" depends="clean,compile"/>
 
 <!--<target name="main" depends="clean,run"/>-->
-	<target name="main" depends="clean"/>
+	<target name="main" depends="compile, clean"/>
 </project>
