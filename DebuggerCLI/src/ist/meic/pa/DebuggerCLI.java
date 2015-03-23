@@ -6,12 +6,28 @@ import javassist.*;
 
 import java.io.*;
 import java.lang.reflect.*;
+import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Stack;
+
+class ObjectFieldValue{
+	public ObjectFieldValue(Object object2, CtField[] fields2, String className2, String methodName) {
+		this.object= object2;
+		this.fields = fields2;
+		this.className= className2;
+		this.call = methodName;
+	}
+	Object object;
+	CtField[] fields;
+	String className;
+	String call;
+}
 
 public class DebuggerCLI {
+	public static Stack<ObjectFieldValue> undoTrail = new Stack<ObjectFieldValue>();
+	
 	public static void main(String[] args) {
 		try{
-			System.out.println("entrei");
 			Translator translator = new MemoizeTranslator();
 			ClassPool pool = ClassPool.getDefault();
 			Loader classLoader = new Loader();
@@ -21,11 +37,15 @@ public class DebuggerCLI {
 			try {
 				classLoader.run(args[0],restArgs);
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				System.out.println(e.getClass().getName() + ": " + e.getMessage());
+				}
+			
 	}catch (Exception e){
-		//TODO 
+		//TODO
 		}
+	}
+	
+	public static void infoCommand(){
+		
 	}
 }

@@ -1,5 +1,7 @@
 package test;
 
+import ist.meic.pa.DebuggerCLI;
+
 class A{
 	int a =1;
 	
