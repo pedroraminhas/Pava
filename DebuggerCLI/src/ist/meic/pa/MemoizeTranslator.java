@@ -37,7 +37,7 @@ public class MemoizeTranslator implements Translator {
 				            public void edit(MethodCall m)  throws CannotCompileException
 				            {
 				            	String s = m.getClassName() + " " + m.getMethodName();
-				            	DebuggerCLI.undoTrail.push(new ObjectFieldValue(null,ctClass.getFields(),m.getClassName(),m.getMethodName()));
+				            	//DebuggerCLI.undoTrail.push(new ObjectFieldValue(null,ctClass.getFields(),m.getClassName(),m.getMethodName()));
 				            }
 				        });
 				  }
