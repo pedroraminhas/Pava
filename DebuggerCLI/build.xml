@@ -7,6 +7,7 @@
     <property name="jar.dir"     value="${build.dir}/jar"/>
     <property name="main-class"  value="ist.meic.pa.DebuggerCLI"/>
 	<property name="javassist.lib" value="lib/javassist.jar"/>
+	<property name="lib.dir" value="lib"/> 
 
 
 	<target name="init">
@@ -23,11 +24,12 @@
     <target name="compile" depends="init">
         <mkdir dir="${classes.dir}"/>
         <javac includeantruntime="false" srcdir="${src.dir}" destdir="${classes.dir}" classpath="${javassist.lib}"/>
-         <mkdir dir="${jar.dir}"/>
+       <!--   <mkdir dir="${jar.dir}"/> -->
         <jar destfile="${ant.project.name}.jar" basedir="${classes.dir}">
             <manifest>
                 <attribute name="Main-Class" value="${main-class}"/>
             </manifest>
+            <zipgroupfileset dir="${lib.dir}" includes="**/*.jar"/>
         </jar>
     </target>
 <!--<target name="run" depends="compile">
