@@ -33,6 +33,11 @@ public class MemoizeTranslator implements Translator {
 	
 	void memoizeMethods(CtClass ctClass) throws NotFoundException,CannotCompileException,ClassNotFoundException{
 		 for(CtMethod ctMethod : ctClass.getDeclaredMethods()){
+				 String tmp = "{ist.meic.pa.History.setStackValue($args, \"%s\");}";
+				// String tmp = "{System.out.println(\"%s\");}";
+				 String modif = String.format(tmp, ctMethod.getLongName());
+				 
+				 ctMethod.insertBefore(modif);
 			 //System.out.println(ctMethod.getName());
 			 //System.out.println(ctClass.getName());
 			 //if (!ctMethod.getName().equals("main"))
@@ -44,7 +49,7 @@ public class MemoizeTranslator implements Translator {
 			 
 			 ctMethod.insertBefore(modif);*/
 			 
-			 ctMethod.instrument(
+			 /*ctMethod.instrument(
 					    new ExprEditor() {
 					        public void edit(MethodCall m)
 					                      throws CannotCompileException
@@ -55,7 +60,7 @@ public class MemoizeTranslator implements Translator {
 								 
 								 m.replace(modif);
 					        }
-					    });
+					    });*/
 			// ctMethod.addCatch("{ System.out.println($e); throw $e; }", ctClass);
 		 }
 		 /*CtMethod method = ctClass.getDeclaredMethod("main");
@@ -68,13 +73,5 @@ public class MemoizeTranslator implements Translator {
 		                }
 		            });*/
 	}
-		 
-	
-/*	boolean NotSystemCall(String name){
-		String[] splittedCall = name.split(".");
-		if (splittedCall[0].equals("java")){
-			return false;}
-		return true;
-	}*/
 }
 

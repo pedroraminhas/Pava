@@ -10,21 +10,9 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Stack;
 
-class ObjectFieldValue{
-	public ObjectFieldValue(Object object2, CtField[] fields2, String className2, String methodName) {
-		this.object= object2;
-		this.fields = fields2;
-		this.className= className2;
-		this.call = methodName;
-	}
-	Object object;
-	CtField[] fields;
-	String className;
-	String call;
-}
 
 public class DebuggerCLI {
-	public static Stack<ObjectFieldValue> undoTrail = new Stack<ObjectFieldValue>();
+	public static Class<?> History;
 	
 	public static void main(String[] args) {
 		try{
@@ -41,6 +29,9 @@ public class DebuggerCLI {
 			try {
 				classLoader.run(args[0],restArgs);
 			} catch (Throwable e) {
+				Method printStack= History.getMethod("printStack");
+				printStack.invoke(null);
+
 				System.out.println(e.getClass().getName() + ": " + e.getMessage());
 				}
 			
@@ -61,7 +52,10 @@ public class DebuggerCLI {
 		classLoader.loadClass("javassist.expr.MethodCall");
 		classLoader.loadClass("javassist.expr.ConstructorCall");
 		classLoader.loadClass("ist.meic.pa.DebuggerCLI");
-		classLoader.loadClass("ist.meic.pa.ObjectFieldValue");
+		History = classLoader.loadClass("ist.meic.pa.History");
+		
+		
+		//classLoader.loadClass("ist.meic.pa.ObjectFieldValue");
 		
 		} catch (Exception e){
 			e.printStackTrace();
