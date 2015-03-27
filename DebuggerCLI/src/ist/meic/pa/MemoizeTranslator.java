@@ -38,17 +38,8 @@ public class MemoizeTranslator implements Translator {
 				 String modif = String.format(tmp, ctMethod.getLongName());
 				 
 				 ctMethod.insertBefore(modif);
-			 //System.out.println(ctMethod.getName());
-			 //System.out.println(ctClass.getName());
-			 //if (!ctMethod.getName().equals("main"))
-			 //System.out.println(ctMethod.getName());
-				// ctMethod.insertBefore("System.out.println(\"Inseri isto!->\");");
-			 /*String tmp = "{System.out.println(\"%s\");}";
-			 
-			 String modif = String.format(tmp, ctMethod.toString());
-			 
-			 ctMethod.insertBefore(modif);*/
-			 
+			
+			
 			 /*ctMethod.instrument(
 					    new ExprEditor() {
 					        public void edit(MethodCall m)

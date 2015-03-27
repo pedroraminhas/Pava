@@ -52,6 +52,7 @@ public class DebuggerCLI {
 		classLoader.loadClass("javassist.expr.MethodCall");
 		classLoader.loadClass("javassist.expr.ConstructorCall");
 		classLoader.loadClass("ist.meic.pa.DebuggerCLI");
+		classLoader.loadClass("ist.meic.pa.ReverseIterable");
 		History = classLoader.loadClass("ist.meic.pa.History");
 		
 		
@@ -62,6 +63,9 @@ public class DebuggerCLI {
 		}
 		
 	}
+	
+	public static void exec(){}
+	
 	public static void infoCommand(){
 		
 	}
