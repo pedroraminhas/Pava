@@ -1,6 +1,8 @@
 package ist.meic.pa;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Stack;
 
 class ObjectFieldValue{
@@ -31,11 +33,14 @@ public class History {
 	public static void printStack(){
 		System.out.println("Call stack:");
 		System.out.println(stack.size());
-		for (Iterator <ObjectFieldValue> it = stack.iterator(); it.hasNext();) {
-			ObjectFieldValue currentCall = it.next();
-			//ObjectFieldValue currentCall = stack.peek();
-			System.out.println(currentCall.methodCall + "::"  + currentCall.fields.toString());
-		}
+		
+        List<ObjectFieldValue> list = new ArrayList<ObjectFieldValue>(stack);
+        ListIterator<ObjectFieldValue> it = list.listIterator(list.size());
+        
+        while(it.hasPrevious()) {
+        	ObjectFieldValue currentCall = it.previous();
+        		System.out.println(currentCall.methodCall + "::"  + currentCall.fields.toString());
+        	}
 	}
 	
 }

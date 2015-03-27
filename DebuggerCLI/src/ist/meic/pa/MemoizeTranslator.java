@@ -32,37 +32,21 @@ public class MemoizeTranslator implements Translator {
 	}
 	
 	void memoizeMethods(CtClass ctClass) throws NotFoundException,CannotCompileException,ClassNotFoundException{
-		 for(CtMethod ctMethod : ctClass.getDeclaredMethods()){
-				 String tmp = "{ist.meic.pa.History.setStackValue($args, \"%s\");}";
-				// String tmp = "{System.out.println(\"%s\");}";
+		for(CtMethod ctMethod : ctClass.getDeclaredMethods()){
+			 String tmp = "{ist.meic.pa.History.setStackValue($args, \"%s\");}";
 				 String modif = String.format(tmp, ctMethod.getLongName());
 				 
 				 ctMethod.insertBefore(modif);
-			
-			
-			 /*ctMethod.instrument(
+			 ctMethod.instrument(
 					    new ExprEditor() {
-					        public void edit(MethodCall m)
-					                      throws CannotCompileException
-					        {
-					        	String tmp = "{  System.out.println(\"%s\"); $_ = $proceed($$); }";
-								 
-								String modif = String.format(tmp, m.where().getLongName().toString());
-								 
-								 m.replace(modif);
-					        }
-					    });*/
-			// ctMethod.addCatch("{ System.out.println($e); throw $e; }", ctClass);
+					        public void edit(MethodCall m) throws CannotCompileException {
+					        	if(!(m.getClassName().contains("java")) && !(m.getClassName().contains("ist.meic.pa"))) {
+					        	String template = "{$_ = ($r) ist.meic.pa.DebuggerCLI.exec(\"" + m.getClassName() + "\",\"" + m.getMethodName() + "\",$0,$args);}";        	
+					        	m.replace(template);
+					        	}
+				        }
+				    });
 		 }
-		 /*CtMethod method = ctClass.getDeclaredMethod("main");
-		    method.instrument(
-		            new ExprEditor() {
-		                public void edit(MethodCall m)
-		                              throws CannotCompileException
-		                {
-		                    System.out.println("Classe: "+m.getClassName() + " Metodo: " + m.getMethodName() + " Assinatura: " + m.getSignature());
-		                }
-		            });*/
 	}
 }
 
