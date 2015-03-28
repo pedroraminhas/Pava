@@ -10,14 +10,14 @@ import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 
 
-public class MemoizeTranslator implements Translator {
+public class ExceptionTranslator implements Translator {
 
 	@Override
 	public void onLoad(ClassPool pool, String className) throws NotFoundException, CannotCompileException {
 			CtClass ctClass =pool.get(className);
 			//System.out.println(ctClass.getName());
 			try {
-				memoizeMethods(ctClass);
+				memoizeMethods(ctClass,className);
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -31,12 +31,12 @@ public class MemoizeTranslator implements Translator {
 
 	}
 	
-	void memoizeMethods(CtClass ctClass) throws NotFoundException,CannotCompileException,ClassNotFoundException{
+	void memoizeMethods(CtClass ctClass, String className) throws NotFoundException,CannotCompileException,ClassNotFoundException{
 		for(CtMethod ctMethod : ctClass.getDeclaredMethods()){
-			 String tmp = "{ist.meic.pa.History.setStackValue($args, \"%s\");}";
-				 String modif = String.format(tmp, ctMethod.getLongName());
-				 
-				 ctMethod.insertBefore(modif);
+			 String tmp = "{ist.meic.pa.History.setStackValue(null,$args, \"%s\",\"%s\");}";
+			 String modif = String.format(tmp,className ,ctMethod.getName());
+			 
+			 ctMethod.insertBefore(modif);
 			 ctMethod.instrument(
 					    new ExprEditor() {
 					        public void edit(MethodCall m) throws CannotCompileException {

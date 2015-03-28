@@ -7,13 +7,15 @@ import java.util.Stack;
 
 class ObjectFieldValue{
 	Object object;
-	Object[] fields;
-	String methodCall;
+	Object[] args;
+	String calledMethod;
+	String calledClass;
 	
-	public ObjectFieldValue(Object object2, Object[] fields2, String methodName) {
-		this.object= object2;
-		this.fields = fields2;
-		this.methodCall = methodName;
+	public ObjectFieldValue(Object object, Object[] args, String calledClass,String calledMethod) {
+		this.object= object;
+		this.args= args;
+		this.calledClass = calledClass;
+		this.calledMethod = calledMethod;
 	}
 }
 
@@ -25,22 +27,52 @@ public class History {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static void setStackValue(Object[] fields2, String methodName){
-		stack.push(new ObjectFieldValue(null,fields2, methodName));
+	public static void setStackValue(Object clazz ,Object[] args, String calledClass,String calledMethod){
+		//System.out.println(clazz);
+
+			stack.push(new ObjectFieldValue(clazz,args, calledClass,calledMethod));
+
 	}
 	
 	
 	public static void printStack(){
-		System.out.println("Call stack:");
-		System.out.println(stack.size());
+		//System.out.println(stack.size());
 		
         List<ObjectFieldValue> list = new ArrayList<ObjectFieldValue>(stack);
         ListIterator<ObjectFieldValue> it = list.listIterator(list.size());
-        
+        ObjectFieldValue currentCall = null;
+        if(it.hasPrevious()){
+        	currentCall = it.previous();
+        	System.out.println("Called Object: ");
+        	System.out.println("       Fields: ");
+        	System.out.println("Call Stack: ");
+        	System.out.println(currentCall.calledClass+"."+currentCall.calledMethod + "("  + parseArgs(currentCall.args)+")");
+        }
         while(it.hasPrevious()) {
-        	ObjectFieldValue currentCall = it.previous();
-        		System.out.println(currentCall.methodCall + "::"  + currentCall.fields.toString());
+        	currentCall = it.previous();
+        	System.out.println(currentCall.calledClass+"."+currentCall.calledMethod + "("  + parseArgs(currentCall.args)+")");
         	}
 	}
 	
+	public static String parseArgs(Object[] args) {
+		String result = null;
+		
+		if(args[0].getClass().getName().contains("String")){
+			String[] castme = (String[]) args[0];
+			for (String s : castme){
+				if(result==null)
+					result= s;
+				else
+					result += "," +s;
+			}
+		} else {	
+			for(int i=0; i < args.length; i++ ) {
+				if(result == null)
+						result = args[i].toString();
+				else
+						result += ","+args[i].toString();
+			}
+		}
+		return result;
+	}
 }

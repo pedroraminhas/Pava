@@ -14,7 +14,7 @@ public class DebuggerCLI {
 	
 	public static void main(String[] args) {
 		try{
-			Translator translator = new MemoizeTranslator();
+			Translator translator = new ExceptionTranslator();
 			
 			Loader classLoader = new Loader();
 			loadAllClasses(classLoader);
@@ -83,7 +83,6 @@ public class DebuggerCLI {
 					}
 				}
 				ret = method.invoke(o,args[0]);		
-				
 			} catch (IllegalAccessException e) {
 				System.out.println("ALGUUM!!");
 			} catch (ClassNotFoundException e) {
@@ -92,8 +91,7 @@ public class DebuggerCLI {
 		} catch(Throwable e) {
 			System.out.println(e.getCause());
 		}
-		return ret;		
-		
+		return ret;			
 	}
 	
 	public static List<Method> getAllMethodsOf(Class<?> clazz) {
