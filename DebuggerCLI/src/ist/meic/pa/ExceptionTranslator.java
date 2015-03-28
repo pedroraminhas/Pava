@@ -3,6 +3,7 @@ package ist.meic.pa;
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
+import javassist.CtField;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 import javassist.Translator;
@@ -17,7 +18,7 @@ public class ExceptionTranslator implements Translator {
 			CtClass ctClass =pool.get(className);
 			//System.out.println(ctClass.getName());
 			try {
-				memoizeMethods(ctClass,className);
+				intersectMethods(ctClass,className);
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -31,11 +32,10 @@ public class ExceptionTranslator implements Translator {
 
 	}
 	
-	void memoizeMethods(CtClass ctClass, String className) throws NotFoundException,CannotCompileException,ClassNotFoundException{
+	void intersectMethods(CtClass ctClass, String className) throws NotFoundException,CannotCompileException,ClassNotFoundException{
 		for(CtMethod ctMethod : ctClass.getDeclaredMethods()){
-			 String tmp = "{ist.meic.pa.History.setStackValue(null,$args, \"%s\",\"%s\");}";
-			 String modif = String.format(tmp,className ,ctMethod.getName());
-			 
+			 String tmp = "{ist.meic.pa.History.setStackValue(null,\"%s\",$args, \"%s\",\"%s\",\"%s\");}";
+			 String modif = String.format(tmp, getAllFields(ctClass.getDeclaredFields()),className ,ctMethod.getName(),null);
 			 ctMethod.insertBefore(modif);
 			 ctMethod.instrument(
 					    new ExprEditor() {
@@ -47,6 +47,16 @@ public class ExceptionTranslator implements Translator {
 				        }
 				    });
 		 }
+	}
+	
+	String getAllFields(CtField[] fields){
+		String result="";
+		for(CtField field : fields) {
+			if(result== "")
+			result = field.getName();
+			else result += " "+ field.getName();
+		}
+		return result;
 	}
 }
 
