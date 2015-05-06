@@ -1,22 +1,27 @@
 ;To load the file use (load "proj.lisp")
 
-(DEFGENERIC s (x))
+(defclass tensor ()
+	((elements	:initarg :tensor-elements)
+	(has :initarg :tensor-has)
+		))
 
-(defmethod s ((x number))
-	x)
+(defun s (y)
+	(make-instance 'tensor :tensor-elements y :tensor-has "s"))
 
-(defun size-of-args (args)
-	(length args))
+(defun v (&rest y)
+	(make-instance 'tensor :tensor-elements y :tensor-has "v"))
 
- (defun v (&rest y)
- 	(format t "~{~a~^ ~}" y)(values))
+(defun reshape (x y)
+	(make-instance 'tensor :tensor-elements y :tensor-has "matrix"))
 
 
- ; (defun v (&rest y)
- ; 	  (dotimes (i (size-of-args y))
+(defmethod print-object ((obj tensor) stream)
+	(let ((tensor-type (slot-value obj 'has))) 
+	(cond 
+		((string= tensor-type "s") (format stream "~S" (slot-value obj 'elements)))
+		((string= tensor-type "v") (format stream "~{~a~^ ~}" (slot-value obj 'elements)))
+		((string= tensor-type "matrix") (format stream "~{~a~^ ~}" (slot-value obj 'elements))))))
 
- ; 	  	  (princ (s (nth i y)))
-	  	
- ; 	  	  t))
-	  
+	
+
 
