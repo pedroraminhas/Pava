@@ -30,6 +30,24 @@
                                (setq currentPos (+ currentPos 1))))))
       :tensor-has "matrix")))
 
+;Returns the symmetric of a number
+(defun symmetric (x)
+	(- 0 x))
+
+
+(defun .-Aux (x)
+	(let ((list-elements (slot-value x 'elements))
+		(list-result ()))
+	(dolist (it list-elements (make-instance 'tensor :tensor-elements list-result :tensor-has "v"))
+		(setf list-result (append list-result (list (symmetric it)))))))
+
+(defun .- (x)
+	(let ((x-elements (slot-value x 'elements)))
+	(cond ((listp x-elements)(.-Aux x))
+		  (t (make-instance 'tensor :tensor-elements (symmetric x-elements) :tensor-has "s")))))
+
+	
+
 (defmethod print-object ((obj tensor) stream)
 	(let ((tensor-type (slot-value obj 'has))) 
 	(cond 
