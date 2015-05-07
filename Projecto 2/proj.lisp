@@ -46,7 +46,11 @@
 	(cond ((listp x-elements)(.-Aux x))
 		  (t (make-instance 'tensor :tensor-elements (symmetric x-elements) :tensor-has "s")))))
 
-	
+;Returns tensor with elements from 1 to x
+(defun interval (x)
+	(let ((value ()))
+		(dotimes (it x (make-instance 'tensor :tensor-elements value :tensor-has "v"))
+			(setf value  (append value (list (+ it 1)))))))	
 
 (defmethod print-object ((obj tensor) stream)
 	(let ((tensor-type (slot-value obj 'has))) 
