@@ -35,7 +35,7 @@
 	(cond 
 		((string= tensor-type "s") (format stream "~S" (slot-value obj 'elements)))
 		((string= tensor-type "v") (format stream "~{~a~^ ~}" (slot-value obj 'elements)))
-		((string= tensor-type "matrix") (format stream "~{~a~^ ~}" (slot-value obj 'elements))))))
+		((string= tensor-type "matrix") (format stream "~{~{~{~a~^ ~}~^ ~%~}~^ ~% ~%~}" (slot-value obj 'elements))))))
 
 	
 
