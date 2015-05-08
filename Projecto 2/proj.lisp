@@ -35,6 +35,7 @@
                                (setq currentPos (+ currentPos 1))))))
       :tensor-has "matrix")))
 
+
 ;Returns the symmetric of a number
 (defun symmetric (x)
 	(- 0 x))
@@ -133,6 +134,14 @@
 	(let ((value ()))
 		(dotimes (it x (make-instance 'tensor :tensor-elements value :tensor-has "v"))
 			(setf value  (append value (list (+ it 1)))))))	
+
+;Shape function
+(defun shape (tensor)
+	(let ((tensor-elements (slot-value tensor 'elements)))
+		(cond ( (not (listp (car tensor-elements))) (print (length tensor-elements))) 
+				 (t	(progn 
+				 		(shape (make-instance 'tensor :tensor-elements (car tensor-elements) :tensor-has "v")))
+				 		(shape (make-instance 'tensor :tensor-elements (cdr tensor-elements) :tensor-has "v"))))))
 
 (defmethod print-object ((obj tensor) stream)
 	(let ((tensor-type (slot-value obj 'has))) 
