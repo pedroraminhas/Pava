@@ -1,18 +1,29 @@
 ;To load the file use (load "proj.lisp")
 
 ;Definition of class Tensor
-
 (defclass tensor ()
-  ((elements :initarg :tensor-elements)
-   (has :initarg :tensor-has)))
+  ((elements :initarg :tensor-elements)))
+
+;Definition of class scalar
+(defclass scalar (tensor)
+	((elements :initarg :tensor-elements)))
+
+;Definition of class vector
+(defclass vector-tensor (tensor)
+	((elements :initarg :tensor-elements)))
+
+;Definition of class matrix
+(defclass matrix (tensor)
+	((elements :initarg :tensor-elements)))
+
 
 
 ;Functions s and v
 (defun s (y)
-  (make-instance 'tensor :tensor-elements y :tensor-has "s"))
+  (make-instance 'scalar :tensor-elements y))
 
 (defun v (&rest y)
-  (make-instance 'tensor :tensor-elements y :tensor-has "v"))
+  (make-instance 'vector-tensor :tensor-elements y))
 
 
 (defun reshape (x y)
@@ -138,18 +149,34 @@
 ;Shape function
 (defun shape (tensor)
 	(let ((tensor-elements (slot-value tensor 'elements)))
-		(cond ( (not (listp (car tensor-elements))) (print (length tensor-elements))) 
+		(cond 	 ((not (listp tensor-elements)) 1)
+				 ((not  (listp (car tensor-elements))) (print (length tensor-elements))) 
 				 (t	(progn 
 				 		(shape (make-instance 'tensor :tensor-elements (car tensor-elements) :tensor-has "v")))
 				 		(shape (make-instance 'tensor :tensor-elements (cdr tensor-elements) :tensor-has "v"))))))
 
-(defmethod print-object ((obj tensor) stream)
-	(let ((tensor-type (slot-value obj 'has))) 
-	(cond 
-		((string= tensor-type "s") (format stream "~S" (slot-value obj 'elements)))
-		((string= tensor-type "v") (format stream "~{~a~^ ~}" (slot-value obj 'elements)))
-		((string= tensor-type "matrix") (format stream "~{~{~{~a~^ ~}~^ ~%~}~^ ~% ~%~}" (slot-value obj 'elements))))))
+; (defmethod print-object ((obj tensor) stream)
+; 	(let ((tensor-type (slot-value obj 'has))) 
+; 	(cond 
+; 		((string= tensor-type "s") (format stream "~S" (slot-value obj 'elements)))
+; 		((string= tensor-type "v") (format stream "~{~a~^ ~}" (slot-value obj 'elements)))
+; 		((string= tensor-type "matrix") (format stream "~{~{~{~a~^ ~}~^ ~%~}~^ ~% ~%~}" (slot-value obj 'elements))))))
 
-	
 
+;Print object	
+(defmethod print-object ((obj scalar) stream) 
+	(format stream "~S" (slot-value obj 'elements)))
+
+(defmethod print-object ((obj vector-tensor) stream) 
+	(format stream "~{~a~^ ~}" (slot-value obj 'elements)))
+
+(defmethod print-object ((obj matrix) stream)
+	(let ((tensor-elements (slot-value obj 'elements)))
+		(loop for x in tensor-elements
+			  for y from 1
+
+			 when (> y 1)
+			 do (format stream "~%~%")
+
+     		 do (format stream "~{~a~^ ~}" x))))
 
