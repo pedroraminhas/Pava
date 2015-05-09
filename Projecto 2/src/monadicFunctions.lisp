@@ -92,10 +92,21 @@
 			(setf value  (append value (list (+ it 1)))))))	
 
 ;Shape function
-(defun shape (tensor)
-	(let ((tensor-elements (slot-value tensor 'elements)))
-		(cond 	 ((not (listp tensor-elements)) 1)
-				 ((not  (listp (car tensor-elements))) (print (length tensor-elements))) 
-				 (t	(progn 
-				 		(shape (make-instance 'tensor :tensor-elements (car tensor-elements) :tensor-has "v")))
-				 		(shape (make-instance 'tensor :tensor-elements (cdr tensor-elements) :tensor-has "v"))))))
+(defgeneric shape (x))
+
+(defmethod shape ((x scalar))
+	1)
+
+(defmethod shape ((x vector-tensor))
+	(let ((tensor-elements (slot-value x 'elements)))
+		(length tensor-elements)))
+
+
+
+; (defun shape (tensor)
+; 	(let ((tensor-elements (slot-value tensor 'elements)))
+; 		(cond 	 ((not (listp tensor-elements)) 1)
+; 				 ((not  (listp (car tensor-elements))) (print (length tensor-elements))) 
+; 				 (t	(progn 
+; 				 		(shape (make-instance 'tensor :tensor-elements (car tensor-elements) :tensor-has "v")))
+; 				 		(shape (make-instance 'tensor :tensor-elements (cdr tensor-elements) :tensor-has "v"))))))
