@@ -1,81 +1,94 @@
-;Here are the aux functions called by the monadic functions
-(defun .-Aux (x)
-	(let ((list-elements (slot-value x 'elements))
-		(list-result ()))
-	(dolist (it list-elements (make-instance 'tensor :tensor-elements list-result :tensor-has "v"))
-		(setf list-result (append list-result (list (symmetric it)))))))
-
-(defun ./Aux (x)
-	(let ((list-elements (slot-value x 'elements))
-		(list-result ()))
-	(dolist (it list-elements (make-instance 'tensor :tensor-elements list-result :tensor-has "v"))
-		(setf list-result (append list-result (list (inverse it)))))))
-
-(defun .!Aux (x)
-	(let ((list-elements (slot-value x 'elements))
-		(list-result ()))
-	(dolist (it list-elements (make-instance 'tensor :tensor-elements list-result :tensor-has "v"))
-		(setf list-result (append list-result (list (factorial it)))))))
-
-(defun .sinAux (x)
-	(let ((list-elements (slot-value x 'elements))
-		(list-result ()))
-	(dolist (it list-elements (make-instance 'tensor :tensor-elements list-result :tensor-has "v"))
-		(setf list-result (append list-result (list (sin it)))))))
-
-(defun .cosAux (x)
-	(let ((list-elements (slot-value x 'elements))
-		(list-result ()))
-	(dolist (it list-elements (make-instance 'tensor :tensor-elements list-result :tensor-has "v"))
-		(setf list-result (append list-result (list (cos it)))))))
-
-(defun .notAux (x)
-	(let ((list-elements (slot-value x 'elements))
-		(list-result ()))
-	(dolist (it list-elements (make-instance 'tensor :tensor-elements list-result :tensor-has "v"))
-		(setf list-result (append list-result (list (negation it)))))))
-
-
-
 ;MONADIC FUNCTIONS
-(defun .- (x)
+
+;Symmetric
+(defgeneric .- (x))
+
+(defmethod .- ((x scalar))
 	(let ((x-elements (slot-value x 'elements)))
-	(cond ((listp x-elements)(.-Aux x))
-		  (t (make-instance 'tensor :tensor-elements (symmetric x-elements) :tensor-has "s")))))
+		(make-instance 'scalar :tensor-elements (symmetric x-elements))))
+
+(defmethod .- ((x vector-tensor))
+	(let ((list-elements (slot-value x 'elements))
+ 		 (list-result ()))
+ 			(dolist (it list-elements (make-instance 'vector-tensor :tensor-elements list-result))
+	 				(setf list-result (append list-result (list (symmetric it)))))))
 
 
-(defun ./ (x)
+;Inverse
+(defgeneric ./ (x))
+
+(defmethod ./ ((x scalar))
 	(let ((x-elements (slot-value x 'elements)))
-	(cond ((listp x-elements)(./Aux x))
-		  (t (make-instance 'tensor :tensor-elements (inverse x-elements) :tensor-has "s")))))
+		(make-instance 'scalar :tensor-elements (inverse x-elements))))
+
+(defmethod ./ ((x vector-tensor))
+	(let ((list-elements (slot-value x 'elements))
+ 		 (list-result ()))
+ 			(dolist (it list-elements (make-instance 'vector-tensor :tensor-elements list-result))
+ 				(setf list-result (append list-result (list (inverse it)))))))
 
 
-(defun .! (x)
+;Factorial
+(defgeneric .! (x))
+
+(defmethod .! ((x scalar))
 	(let ((x-elements (slot-value x 'elements)))
-	(cond ((listp x-elements)(.!Aux x))
-		  (t (make-instance 'tensor :tensor-elements (factorial x-elements) :tensor-has "s")))))
+		(make-instance 'scalar :tensor-elements (factorial x-elements))))
 
-(defun .sin (x)
-	(let ((x-elements (slot-value x 'elements)))
-	(cond ((listp x-elements)(.sinAux x))
-		  (t (make-instance 'tensor :tensor-elements (sin x-elements) :tensor-has "s")))))
+(defmethod .! ((x vector-tensor))
+	(let ((list-elements (slot-value x 'elements))
+ 		 (list-result ()))
+ 			(dolist (it list-elements (make-instance 'vector-tensor :tensor-elements list-result))
+ 				(setf list-result (append list-result (list (factorial it)))))))
 
-(defun .cos (x)
-	(let ((x-elements (slot-value x 'elements)))
-	(cond ((listp x-elements)(.cosAux x))
-		  (t (make-instance 'tensor :tensor-elements (cos x-elements) :tensor-has "s")))))
 
-(defun .not (x)
+;Sin
+(defgeneric .sin (x))
+
+(defmethod .sin ((x scalar))
 	(let ((x-elements (slot-value x 'elements)))
-	(cond ((listp x-elements)(.notAux x))
-		  (t (make-instance 'tensor :tensor-elements (negation x-elements) :tensor-has "s")))))
+		(make-instance 'scalar :tensor-elements (sin x-elements))))
+
+(defmethod .sin ((x vector-tensor))
+	(let ((list-elements (slot-value x 'elements))
+ 		 (list-result ()))
+ 			(dolist (it list-elements (make-instance 'vector-tensor :tensor-elements list-result))
+ 				(setf list-result (append list-result (list (sin it)))))))
+
+
+;Cos
+(defgeneric .cos (x))
+
+(defmethod .cos ((x scalar))
+	(let ((x-elements (slot-value x 'elements)))
+		(make-instance 'scalar :tensor-elements (cos x-elements))))
+
+(defmethod .cos ((x vector-tensor))
+	(let ((list-elements (slot-value x 'elements))
+ 		 (list-result ()))
+ 			(dolist (it list-elements (make-instance 'vector-tensor :tensor-elements list-result))
+ 				(setf list-result (append list-result (list (cos it)))))))
+
+;Negation
+(defgeneric .not (x))
+
+(defmethod .not ((x scalar))
+	(let ((x-elements (slot-value x 'elements)))
+		(make-instance 'scalar :tensor-elements (negation x-elements))))
+
+(defmethod .not ((x vector-tensor))
+	(let ((list-elements (slot-value x 'elements))
+ 		 (list-result ()))
+ 			(dolist (it list-elements (make-instance 'vector-tensor :tensor-elements list-result))
+ 				(setf list-result (append list-result (list (negation it)))))))
+
 
 
 
 ;Returns tensor with elements from 1 to x
 (defun interval (x)
 	(let ((value ()))
-		(dotimes (it x (make-instance 'tensor :tensor-elements value :tensor-has "v"))
+		(dotimes (it x (make-instance 'vector-tensor :tensor-elements value))
 			(setf value  (append value (list (+ it 1)))))))	
 
 ;Shape function
