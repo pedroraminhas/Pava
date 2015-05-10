@@ -3,3 +3,4 @@
 (load "monadicFunctions.lisp")
 (load "print.lisp")
 (load "proj.lisp")
+(load "exercises.lisp")
