@@ -245,3 +245,16 @@
 		  (matrix-rows (length x-elements))
 		  (matrix-columns (length (car x-elements))))
 		  (v matrix-rows matrix-columns)))
+
+
+(defmethod shape ((x tensor))
+	(let ((tensor-elements (slot-value x 'elements)))
+		(make-instance 'vector-tensor :tensor-elements (shape-aux tensor-elements))))
+
+
+(defun shape-aux (x)
+	(let ((result ()))
+		(cond	((not (listp (car x))) (list (length x)))
+				(t (append (list (length x)) (shape-aux (car x)))))))
+
+
