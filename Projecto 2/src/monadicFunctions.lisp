@@ -26,6 +26,18 @@
 			 		(setf matrix-result (append matrix-result (list vector-resut)))
 			 		(setf vector-resut ())))))
 
+(defmethod .- ((x tensor))
+	(let ((tensor-elements (slot-value x 'elements)))
+		(make-instance 'tensor :tensor-elements (.-Aux tensor-elements))))
+
+(defun .-Aux (tensor-elements)
+	(let ((result ()))
+		(cond ((not (listp (car (car tensor-elements)))) (slot-value (.- (make-instance 'matrix :tensor-elements tensor-elements)) 'elements))
+				( t (progn (loop for x in tensor-elements
+						  			do (progn (setf result (append result (list (.-Aux x))))))
+									result)))))
+
+
 
 ;Inverse
 (defgeneric ./ (x))
@@ -53,6 +65,17 @@
 			 		(setf matrix-result (append matrix-result (list vector-resut)))
 			 		(setf vector-resut ())))))
 
+(defmethod ./ ((x tensor))
+	(let ((tensor-elements (slot-value x 'elements)))
+		(make-instance 'tensor :tensor-elements (./Aux tensor-elements))))
+
+(defun ./Aux (tensor-elements)
+	(let ((result ()))
+		(cond ((not (listp (car (car tensor-elements)))) (slot-value (./ (make-instance 'matrix :tensor-elements tensor-elements)) 'elements))
+				( t (progn (loop for x in tensor-elements
+						  			do (progn (setf result (append result (list (./Aux x))))))
+									result)))))
+
 
 ;Factorial
 (defgeneric .! (x))
@@ -79,6 +102,17 @@
 
 			 		(setf matrix-result (append matrix-result (list vector-resut)))
 			 		(setf vector-resut ())))))
+
+(defmethod .! ((x tensor))
+	(let ((tensor-elements (slot-value x 'elements)))
+		(make-instance 'tensor :tensor-elements (.!Aux tensor-elements))))
+
+(defun .!Aux (tensor-elements)
+	(let ((result ()))
+		(cond ((not (listp (car (car tensor-elements)))) (slot-value (.! (make-instance 'matrix :tensor-elements tensor-elements)) 'elements))
+				( t (progn (loop for x in tensor-elements
+						  			do (progn (setf result (append result (list (.!Aux x))))))
+									result)))))
 ;Sin
 (defgeneric .sin (x))
 
@@ -104,6 +138,17 @@
 
 			 		(setf matrix-result (append matrix-result (list vector-resut)))
 			 		(setf vector-resut ())))))
+
+(defmethod .sin ((x tensor))
+	(let ((tensor-elements (slot-value x 'elements)))
+		(make-instance 'tensor :tensor-elements (.sinAux tensor-elements))))
+
+(defun .sinAux (tensor-elements)
+	(let ((result ()))
+		(cond ((not (listp (car (car tensor-elements)))) (slot-value (.sin (make-instance 'matrix :tensor-elements tensor-elements)) 'elements))
+				( t (progn (loop for x in tensor-elements
+						  			do (progn (setf result (append result (list (.sinAux x))))))
+									result)))))
 
 ;Cos
 (defgeneric .cos (x))
@@ -131,6 +176,16 @@
 			 		(setf matrix-result (append matrix-result (list vector-resut)))
 			 		(setf vector-resut ())))))
 
+(defmethod .cos ((x tensor))
+	(let ((tensor-elements (slot-value x 'elements)))
+		(make-instance 'tensor :tensor-elements (.cosAux tensor-elements))))
+
+(defun .cosAux (tensor-elements)
+	(let ((result ()))
+		(cond ((not (listp (car (car tensor-elements)))) (slot-value (.cos (make-instance 'matrix :tensor-elements tensor-elements)) 'elements))
+				( t (progn (loop for x in tensor-elements
+						  			do (progn (setf result (append result (list (.cosAux x))))))
+									result)))))
 ;Negation
 (defgeneric .not (x))
 
@@ -158,7 +213,16 @@
 			 		(setf vector-resut ())))))
 
 
+(defmethod .not((x tensor))
+	(let ((tensor-elements (slot-value x 'elements)))
+		(make-instance 'tensor :tensor-elements (.notAux tensor-elements))))
 
+(defun .notAux (tensor-elements)
+	(let ((result ()))
+		(cond ((not (listp (car (car tensor-elements)))) (slot-value (.not (make-instance 'matrix :tensor-elements tensor-elements)) 'elements))
+				( t (progn (loop for x in tensor-elements
+						  			do (progn (setf result (append result (list (.notAux x))))))
+									result)))))
 
 ;Returns tensor with elements from 1 to x
 (defun interval (x)
