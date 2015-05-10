@@ -170,19 +170,14 @@
 (defgeneric shape (x))
 
 (defmethod shape ((x scalar))
-	1)
+	(v 1))
 
 (defmethod shape ((x vector-tensor))
 	(let ((tensor-elements (slot-value x 'elements)))
-		(length tensor-elements)))
+		(v (length tensor-elements))))
 
-
-
-
-; (defun shape (tensor)
-; 	(let ((tensor-elements (slot-value tensor 'elements)))
-; 		(cond 	 ((not (listp tensor-elements)) 1)
-; 				 ((not  (listp (car tensor-elements))) (print (length tensor-elements))) 
-; 				 (t	(progn 
-; 				 		(shape (make-instance 'tensor :tensor-elements (car tensor-elements) :tensor-has "v")))
-; 				 		(shape (make-instance 'tensor :tensor-elements (cdr tensor-elements) :tensor-has "v"))))))
+(defmethod shape ((x matrix))
+	(let* ((x-elements (slot-value x 'elements))
+		  (matrix-rows (length x-elements))
+		  (matrix-columns (length (car x-elements))))
+		  (v matrix-rows matrix-columns)))
