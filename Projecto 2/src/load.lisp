@@ -2,5 +2,5 @@
 (load "functions.lisp")
 (load "monadicFunctions.lisp")
 (load "print.lisp")
-(load "proj.lisp")
+(load "utils.lisp")
 (load "exercises.lisp")
