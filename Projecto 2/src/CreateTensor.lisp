@@ -33,4 +33,4 @@
                                        collect (current-value vec2))
                                      vec2))
          (final-solution (nth (- (length solution-tree) 1) solution-tree)))
-         (make-instance 'matrix :tensor-elements final-solution)))
+         (make-instance 'tensor :tensor-elements final-solution)))
