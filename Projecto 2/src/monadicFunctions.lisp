@@ -234,21 +234,13 @@
 (defgeneric shape (x))
 
 (defmethod shape ((x scalar))
-	(v 0))
+	(v 0)) ; porque o shape de um escalar é zero
 
-; Não são necessários estes metodos
+(defmethod shape ((x vector-tensor))
+	(let ((tensor-elements (slot-value x 'elements)))
+		(make-instance 'scalar :tensor-elements (length tensor-elements))))
 
-;(defmethod shape ((x vector-tensor))
-;	(let ((tensor-elements (slot-value x 'elements)))
-;		(v (length tensor-elements))))
-
-;(defmethod shape ((x matrix))
-;	(let* ((x-elements (slot-value x 'elements))
-;		  (matrix-rows (length x-elements))
-;		  (matrix-columns (length (car x-elements))))
-;		  (v matrix-rows matrix-columns)))
-
-;Este shape trata de todos os tipos de tensor menos sclares
+;Faz o shape qualquer tensor que nao seja escalar ou vector
 (defmethod shape ((x tensor))
 	(let ((tensor-elements (slot-value x 'elements)))
 		(make-instance 'vector-tensor :tensor-elements (tensor-dims tensor-elements))))
@@ -257,10 +249,5 @@
   (if (not (listp tensor))
       ()
       (cons (length tensor) (tensor-dims (car tensor)))))
-
-;(defun shape-aux (x)
-;	(let ((result ()))
-;		(cond	((not (listp (car x))) (list (length x)))
-;				(t (append (list (length x)) (shape-aux (car x)))))))
 
 
