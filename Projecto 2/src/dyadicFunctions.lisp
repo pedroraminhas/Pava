@@ -39,3 +39,28 @@
 				(t (loop for x in tensor-elements
 					do (setf result (append result (list (subtraction-tensor-scalar t2 (make-instance 'tensor :tensor-elements x))))))))
 		result))
+
+(defmethod .-dyadic ((t1 tensor) (t2 tensor))
+	(let* ((t1-elements (slot-value t1 'elements))
+		  (t2-elements (slot-value t2 'elements))
+		  (t1-shape (slot-value (shape t1) 'elements))
+		  (t2-shape (slot-value (shape t2) 'elements)))
+			(if (eq t1-shape t2-shape) (subtraction-tensor-tensor t1-elements t2-elements) (error "Tensors dont have the same size"))))
+
+
+
+(defun subtraction-tensor-tensor (t1 t2)
+	(let ((result ()))
+		(cond ((not (listp (car t1))) (loop for x in t1
+											for y in t2
+										 (setf result (append result (list (- x y))))))
+				(t (loop for x in t1
+						 for y in t2
+					do (setf result (append result (list (subtraction-tensor-tensor t1 t2)))))))
+		result))
+	
+
+
+
+
+
