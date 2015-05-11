@@ -1,19 +1,19 @@
 ;MONADIC FUNCTIONS
 
 ;Symmetric
-(defgeneric .- (x))
+(defgeneric .-monadic (x &optional s))
 
-(defmethod .- ((x scalar))
+(defmethod .-monadic ((x scalar) &optional s)
 	(let ((x-elements (slot-value x 'elements)))
 		(make-instance 'scalar :tensor-elements (symmetric x-elements))))
 
-(defmethod .- ((x vector-tensor))
+(defmethod .-monadic ((x vector-tensor) &optional s)
 	(let ((list-elements (slot-value x 'elements))
  		 (list-result ()))
  			(dolist (it list-elements (make-instance 'vector-tensor :tensor-elements list-result))
 	 				(setf list-result (append list-result (list (symmetric it)))))))
 
-(defmethod .- ((x matrix))
+(defmethod .-monadic ((x matrix) &optional s)
 	(let ((matrix-elements (slot-value x 'elements))
 		 (matrix-result ())
 		 (vector-resut ()))
@@ -26,13 +26,13 @@
 			 		(setf matrix-result (append matrix-result (list vector-resut)))
 			 		(setf vector-resut ())))))
 
-(defmethod .- ((x tensor))
+(defmethod .-monadic ((x tensor) &optional s)
 	(let ((tensor-elements (slot-value x 'elements)))
 		(make-instance 'tensor :tensor-elements (.-Aux tensor-elements))))
 
 (defun .-Aux (tensor-elements)
 	(let ((result ()))
-		(cond ((not (listp (car (car tensor-elements)))) (slot-value (.- (make-instance 'matrix :tensor-elements tensor-elements)) 'elements))
+		(cond ((not (listp (car (car tensor-elements)))) (slot-value (.-monadic (make-instance 'matrix :tensor-elements tensor-elements)) 'elements))
 				( t (progn (loop for x in tensor-elements
 						  			do (progn (setf result (append result (list (.-Aux x))))))
 									result)))))
