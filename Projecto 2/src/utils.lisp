@@ -43,3 +43,16 @@
 
 (defun make-tree (shape v seq)
   (cons v (make-tree-recursive shape (list v) seq)))
+
+;É número primo?
+(defun primep (value)
+  (if (eq (length (dividers value)) 2)
+    T
+    nil))
+
+;Divisores de um número
+(defun dividers (value)
+  (loop for x from 1 to value
+        when (eq (mod value x) 0)
+        collect x))
+
