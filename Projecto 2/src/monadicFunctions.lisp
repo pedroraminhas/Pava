@@ -234,27 +234,33 @@
 (defgeneric shape (x))
 
 (defmethod shape ((x scalar))
-	(v 1))
+	(v 0))
 
-(defmethod shape ((x vector-tensor))
-	(let ((tensor-elements (slot-value x 'elements)))
-		(v (length tensor-elements))))
+; Não são necessários estes metodos
 
-(defmethod shape ((x matrix))
-	(let* ((x-elements (slot-value x 'elements))
-		  (matrix-rows (length x-elements))
-		  (matrix-columns (length (car x-elements))))
-		  (v matrix-rows matrix-columns)))
+;(defmethod shape ((x vector-tensor))
+;	(let ((tensor-elements (slot-value x 'elements)))
+;		(v (length tensor-elements))))
 
+;(defmethod shape ((x matrix))
+;	(let* ((x-elements (slot-value x 'elements))
+;		  (matrix-rows (length x-elements))
+;		  (matrix-columns (length (car x-elements))))
+;		  (v matrix-rows matrix-columns)))
 
+;Este shape trata de todos os tipos de tensor menos sclares
 (defmethod shape ((x tensor))
 	(let ((tensor-elements (slot-value x 'elements)))
-		(make-instance 'vector-tensor :tensor-elements (shape-aux tensor-elements))))
+		(make-instance 'vector-tensor :tensor-elements (tensor-dims tensor-elements))))
 
+(defun tensor-dims (tensor)
+  (if (not (listp tensor))
+      ()
+      (cons (length tensor) (tensor-dims (car tensor)))))
 
-(defun shape-aux (x)
-	(let ((result ()))
-		(cond	((not (listp (car x))) (list (length x)))
-				(t (append (list (length x)) (shape-aux (car x)))))))
+;(defun shape-aux (x)
+;	(let ((result ()))
+;		(cond	((not (listp (car x))) (list (length x)))
+;				(t (append (list (length x)) (shape-aux (car x)))))))
 
 
