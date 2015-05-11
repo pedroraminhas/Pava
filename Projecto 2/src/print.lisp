@@ -36,7 +36,7 @@
 (defun print-object-aux (obj stream depth total-depth final)
 	(let ((tensor-elements (slot-value obj 'elements))
 		 (depth-aux depth))
-	(cond ((not (listp (car (car tensor-elements)))) (print-list-of-lists tensor-elements stream (- total-depth depth) final))
+	(cond 	((not (listp (car (car tensor-elements)))) (print-list-of-lists tensor-elements stream (- total-depth depth) final))
 			(t (progn (setf depth (+ depth 1))
 					(loop for x in tensor-elements
 						  for i from 1

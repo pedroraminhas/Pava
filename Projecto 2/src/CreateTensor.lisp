@@ -33,4 +33,5 @@
                                        collect (current-value vec2))
                                      vec2))
          (final-solution (nth (- (length solution-tree) 1) solution-tree)))
-         (make-instance 'tensor :tensor-elements final-solution)))
+         (if (not (listp (car final-solution)))  (make-instance 'vector-tensor :tensor-elements final-solution)
+         (make-instance 'tensor :tensor-elements final-solution) )))
