@@ -624,7 +624,7 @@
 (defmethod select ((t1 tensor) (t2 vector-tensor))
 	(let ((t1-elements (slot-value t1 'elements))
 		  (t2-elements (slot-value t2 'elements)))
-			(make-instance 'vector-tensor :tensor-elements (car (select-aux t1-elements t2-elements)))))
+			(make-instance 'vector-tensor :tensor-elements (select-aux t1-elements t2-elements))))
 
 (defmethod select ((t1 tensor) (t2 tensor))
 	(let ((t1-elements (slot-value t1 'elements))
@@ -635,7 +635,7 @@
 	(let ((t1-size (length (slot-value (shape  (make-instance 'tensor :tensor-elements t1)) 'elements)))
 		  (t2-size (length (slot-value (shape  (make-instance 'tensor :tensor-elements t2)) 'elements)))
 		  (result ()))
-	(cond ((equal t1-size t2-size) (setf result (append result (list (select-list t1 t2)))))
+	(cond ((equal t1-size t2-size) (setf result (append result (select-list t1 t2))))
 		  (t (loop for x in t2
 		  		do (setf result (append result (list (select-aux t1 x)))))))
 	result))
