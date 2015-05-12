@@ -608,3 +608,44 @@
        (t (prog2 (format t "RANK ERROR") (setf solution nil))))
 
       (make-instance 'tensor :tensor-elements solution)))
+
+
+;Select
+
+
+(defgeneric select (x y))
+
+(defmethod select ((t1 scalar) (t2 scalar))
+	(let ((t1-element (slot-value t1 'elements))
+		  (t2-element (slot-value t2 'elements)))
+			(if (equal t1-element 1) (s t2-element) (s 0))
+	))
+
+(defmethod select ((t1 tensor) (t2 vector-tensor))
+	(let ((t1-elements (slot-value t1 'elements))
+		  (t2-elements (slot-value t2 'elements)))
+			(make-instance 'vector-tensor :tensor-elements (car (select-aux t1-elements t2-elements)))))
+
+(defmethod select ((t1 tensor) (t2 tensor))
+	(let ((t1-elements (slot-value t1 'elements))
+		  (t2-elements (slot-value t2 'elements)))
+			(make-instance 'tensor :tensor-elements (select-aux t1-elements t2-elements))))
+
+(defun select-aux (t1 t2)
+	(let ((t1-size (length (slot-value (shape  (make-instance 'tensor :tensor-elements t1)) 'elements)))
+		  (t2-size (length (slot-value (shape  (make-instance 'tensor :tensor-elements t2)) 'elements)))
+		  (result ()))
+	(cond ((equal t1-size t2-size) (setf result (append result (list (select-list t1 t2)))))
+		  (t (loop for x in t2
+		  		do (setf result (append result (list (select-aux t1 x)))))))
+	result))
+
+(defun select-list (t1 t2)
+	(let ((result-aux ()))
+	(cond ((not (listp (car t2))) (loop for x in t1
+										for y in t2
+										do (if (not (equal x 0)) (setf result-aux (append result-aux (list y))))))
+			(t (loop for x in t1
+					 for y in t2
+				do (setf result (append result-aux (list (select-list x y)))))))
+	result-aux))
