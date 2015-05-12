@@ -6,6 +6,13 @@
 
 (defgeneric .-dyadic (x y))
 
+(defmethod .-dyadic ((x scalar) (y scalar))
+	(let* ((x-elements (slot-value x 'elements))
+		   (y-elements (slot-value y 'elements))
+		   (result (- x-elements y-elements)))
+			 (make-instance 'scalar :tensor-elements result)
+	))
+
 (defmethod .-dyadic ((x tensor) (y scalar))
 			 (make-instance 'tensor :tensor-elements (subtraction-tensor-scalar x y))
 	)
@@ -40,6 +47,13 @@
 ;Addition
 (defgeneric .+ (x y))
 
+(defmethod .+ ((x scalar) (y scalar))
+	(let* ((x-elements (slot-value x 'elements))
+		   (y-elements (slot-value y 'elements))
+		   (result (+ x-elements y-elements)))
+			 (make-instance 'scalar :tensor-elements result)
+	))
+
 (defmethod .+ ((x tensor) (y scalar))
 			 (make-instance 'tensor :tensor-elements (addition-tensor-scalar x y))
 	)
@@ -73,6 +87,13 @@
 	
 ;Multiplication
 (defgeneric .* (x y))
+
+(defmethod .* ((x scalar) (y scalar))
+	(let* ((x-elements (slot-value x 'elements))
+		   (y-elements (slot-value y 'elements))
+		   (result (* x-elements y-elements)))
+			 (make-instance 'scalar :tensor-elements result)
+	))
 
 (defmethod .* ((x tensor) (y scalar))
 			 (make-instance 'tensor :tensor-elements (multiplication-tensor-scalar x y))
@@ -110,6 +131,13 @@
 
 (defun ./ (x &optional y)
 	(if (eq y NIL)	(./monadic x) (./dyadic x y)))
+
+(defmethod ./dyadic ((x scalar) (y scalar))
+	(let* ((x-elements (slot-value x 'elements))
+		   (y-elements (slot-value y 'elements))
+		   (result (/ x-elements y-elements)))
+			 (make-instance 'scalar :tensor-elements result)
+	))
 
 (defmethod ./dyadic ((x tensor) (y scalar))
 			 (make-instance 'tensor :tensor-elements (division-tensor-scalar x y))
