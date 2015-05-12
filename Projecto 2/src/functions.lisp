@@ -37,6 +37,11 @@
 	(cond ((equal x y) 1)
 		   (t 0)))
 
+(defun or-val (x y)
+	(cond ((not (equal x 0)) 1)
+		  ((not (equal y 0)) 1)
+		  (t 0)))
+
 (defgeneric subtraction-tensor-scalar (t1 t2))
 
 (defmethod subtraction-tensor-scalar ((t1 tensor) (t2 scalar))
@@ -376,4 +381,35 @@
         (t (loop for x in t1
              for y in t2
           do (setf result (append result (list (equal-val-tensor-tensor x y)))))))
+    result))
+
+;Or
+
+(defgeneric or-val-tensor-scalar (t1 t2))
+
+(defmethod or-val-tensor-scalar ((t1 tensor) (t2 scalar))
+  (let ((result ())
+     (tensor-elements (slot-value t1 'elements)))
+    (cond ((not (listp (car tensor-elements))) (dolist (it tensor-elements result) (setf result (append result (list (or-val it (slot-value t2 'elements)))))))
+        (t (loop for x in tensor-elements
+          do (setf result (append result (list (or-val-tensor-scalar (make-instance 'tensor :tensor-elements x) t2)))))))
+    result))
+
+(defmethod or-val-tensor-scalar ((t2 scalar) (t1 tensor))
+  (let ((result ())
+     (tensor-elements (slot-value t1 'elements)))
+    (cond ((not (listp (car tensor-elements))) (dolist (it tensor-elements result) (setf result (append result (list (or-val (slot-value t2 'elements) it))))))
+        (t (loop for x in tensor-elements
+          do (setf result (append result (list (or-val-tensor-scalar t2 (make-instance 'tensor :tensor-elements x))))))))
+    result))
+
+
+(defun or-val-tensor-tensor (t1 t2)
+  (let ((result ()))
+    (cond ((not (listp (car t1))) (loop for x in t1
+                      for y in t2
+                     do (setf result (append result (list (or-val x y))))))
+        (t (loop for x in t1
+             for y in t2
+          do (setf result (append result (list (or-val-tensor-tensor x y)))))))
     result))
