@@ -17,6 +17,22 @@
 	(cond ((eq x 0) 1)
 			(t 0)))
 
+(defun less-than (x y)
+	(cond ((< x y) 1)
+		  (t 0)))
+
+(defun greater-than (x y)
+	(cond ((> x y) 1)
+		  (t 0)))
+
+(defun less-equal-than (x y)
+	(cond ((<= x y) 1)
+		  (t 0)))
+
+(defun greater-equal-than (x y)
+	(cond ((>= x y) 1)
+		  (t 0)))
+
 (defgeneric subtraction-tensor-scalar (t1 t2))
 
 (defmethod subtraction-tensor-scalar ((t1 tensor) (t2 scalar))
@@ -199,4 +215,35 @@
         (t (loop for x in t1
              for y in t2
           do (setf result (append result (list (mod-tensor-tensor x y)))))))
+    result))
+
+;Less Than
+
+(defgeneric less-than-tensor-scalar (t1 t2))
+
+(defmethod less-than-tensor-scalar ((t1 tensor) (t2 scalar))
+  (let ((result ())
+     (tensor-elements (slot-value t1 'elements)))
+    (cond ((not (listp (car tensor-elements))) (dolist (it tensor-elements result) (setf result (append result (list (less-than it (slot-value t2 'elements)))))))
+        (t (loop for x in tensor-elements
+          do (setf result (append result (list (less-than-tensor-scalar (make-instance 'tensor :tensor-elements x) t2)))))))
+    result))
+
+(defmethod less-than-tensor-scalar ((t2 scalar) (t1 tensor))
+  (let ((result ())
+     (tensor-elements (slot-value t1 'elements)))
+    (cond ((not (listp (car tensor-elements))) (dolist (it tensor-elements result) (setf result (append result (list (less-than (slot-value t2 'elements) it))))))
+        (t (loop for x in tensor-elements
+          do (setf result (append result (list (less-than-tensor-scalar t2 (make-instance 'tensor :tensor-elements x))))))))
+    result))
+
+
+(defun less-than-tensor-tensor (t1 t2)
+  (let ((result ()))
+    (cond ((not (listp (car t1))) (loop for x in t1
+                      for y in t2
+                     do (setf result (append result (list (less-than x y))))))
+        (t (loop for x in t1
+             for y in t2
+          do (setf result (append result (list (less-than-tensor-tensor x y)))))))
     result))
