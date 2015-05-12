@@ -40,19 +40,19 @@
 
 
 ;Inverse
-(defgeneric ./ (x))
+(defgeneric ./monadic (x))
 
-(defmethod ./ ((x scalar))
+(defmethod ./monadic ((x scalar))
 	(let ((x-elements (slot-value x 'elements)))
 		(make-instance 'scalar :tensor-elements (inverse x-elements))))
 
-(defmethod ./ ((x vector-tensor))
+(defmethod ./monadic ((x vector-tensor))
 	(let ((list-elements (slot-value x 'elements))
  		 (list-result ()))
  			(dolist (it list-elements (make-instance 'vector-tensor :tensor-elements list-result))
  				(setf list-result (append list-result (list (inverse it)))))))
 
-(defmethod ./ ((x matrix))
+(defmethod ./monadic ((x matrix))
 	(let ((matrix-elements (slot-value x 'elements))
 		 (matrix-result ())
 		 (vector-resut ()))
@@ -65,15 +65,15 @@
 			 		(setf matrix-result (append matrix-result (list vector-resut)))
 			 		(setf vector-resut ())))))
 
-(defmethod ./ ((x tensor))
+(defmethod ./monadic ((x tensor))
 	(let ((tensor-elements (slot-value x 'elements)))
-		(make-instance 'tensor :tensor-elements (./Aux tensor-elements))))
+		(make-instance 'tensor :tensor-elements (./monadicAux tensor-elements))))
 
-(defun ./Aux (tensor-elements)
+(defun ./monadicAux (tensor-elements)
 	(let ((result ()))
-		(cond ((not (listp (car (car tensor-elements)))) (slot-value (./ (make-instance 'matrix :tensor-elements tensor-elements)) 'elements))
+		(cond ((not (listp (car (car tensor-elements)))) (slot-value (./monadic (make-instance 'matrix :tensor-elements tensor-elements)) 'elements))
 				( t (progn (loop for x in tensor-elements
-						  			do (progn (setf result (append result (list (./Aux x))))))
+						  			do (progn (setf result (append result (list (./monadicAux x))))))
 									result)))))
 
 

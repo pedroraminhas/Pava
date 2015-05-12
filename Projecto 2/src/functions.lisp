@@ -106,3 +106,34 @@
              for y in t2
           do (setf result (append result (list (multiplication-tensor-tensor x y)))))))
     result))
+
+;Division
+
+(defgeneric division-tensor-scalar (t1 t2))
+
+(defmethod division-tensor-scalar ((t1 tensor) (t2 scalar))
+  (let ((result ())
+     (tensor-elements (slot-value t1 'elements)))
+    (cond ((not (listp (car tensor-elements))) (dolist (it tensor-elements result) (setf result (append result (list (/ it (slot-value t2 'elements)))))))
+        (t (loop for x in tensor-elements
+          do (setf result (append result (list (division-tensor-scalar (make-instance 'tensor :tensor-elements x) t2)))))))
+    result))
+
+(defmethod division-tensor-scalar ((t2 scalar) (t1 tensor))
+  (let ((result ())
+     (tensor-elements (slot-value t1 'elements)))
+    (cond ((not (listp (car tensor-elements))) (dolist (it tensor-elements result) (setf result (append result (list (/ (slot-value t2 'elements) it))))))
+        (t (loop for x in tensor-elements
+          do (setf result (append result (list (division-tensor-scalar t2 (make-instance 'tensor :tensor-elements x))))))))
+    result))
+
+
+(defun division-tensor-tensor (t1 t2)
+  (let ((result ()))
+    (cond ((not (listp (car t1))) (loop for x in t1
+                      for y in t2
+                     do (setf result (append result (list (/ x y))))))
+        (t (loop for x in t1
+             for y in t2
+          do (setf result (append result (list (division-tensor-tensor x y)))))))
+    result))

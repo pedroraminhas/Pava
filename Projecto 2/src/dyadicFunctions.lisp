@@ -106,6 +106,38 @@
 			(if (equal t1-shape t2-shape) (make-instance 'vector-tensor :tensor-elements (multiplication-tensor-tensor t1-elements t2-elements)) (error "Error: Tensors dont have the same size"))))
 
 
+;Division
+
+(defun ./ (x &optional y)
+	(if (eq y NIL)	(./monadic x) (./dyadic x y)))
+
+(defmethod ./dyadic ((x tensor) (y scalar))
+			 (make-instance 'tensor :tensor-elements (division-tensor-scalar x y))
+	)
+
+(defmethod ./dyadic ((x vector-tensor) (y scalar))
+			 (make-instance 'vector-tensor :tensor-elements (division-tensor-scalar x y))
+	)
+
+(defmethod ./dyadic ( (y scalar) (x tensor))
+			(make-instance 'tensor :tensor-elements (division-tensor-scalar y x))
+	)
+
+(defmethod ./dyadic ( (y scalar) (x vector-tensor))
+			(make-instance 'vector-tensor :tensor-elements (division-tensor-scalar y x))
+	)
 
 
+(defmethod ./dyadic ((t1 tensor) (t2 tensor))
+	(let* ((t1-elements (slot-value t1 'elements))
+		  (t2-elements (slot-value t2 'elements))
+		  (t1-shape (slot-value (shape t1) 'elements))
+		  (t2-shape (slot-value (shape t2) 'elements)))
+			(if (equal t1-shape t2-shape) (make-instance 'tensor :tensor-elements (division-tensor-tensor t1-elements t2-elements)) (error "Error: Tensors dont have the same size"))))
 
+(defmethod ./dyadic ((t1 vector-tensor) (t2 vector-tensor))
+	(let* ((t1-elements (slot-value t1 'elements))
+		  (t2-elements (slot-value t2 'elements))
+		  (t1-shape (slot-value (shape t1) 'elements))
+		  (t2-shape (slot-value (shape t2) 'elements)))
+			(if (equal t1-shape t2-shape) (make-instance 'vector-tensor :tensor-elements (division-tensor-tensor t1-elements t2-elements)) (error "Error: Tensors dont have the same size"))))
