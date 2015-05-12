@@ -55,5 +55,27 @@
   (loop for x from 1 to value
         when (eq (mod value x) 0)
         collect x))
+        
+(defun find-and-remove (lst deep it range) ; remove o numero elementos especificado pelo range a uma dada deep
+  (let ((first-el (car lst)))
+    (cond ((eq deep it) (remove-elements range lst))
+          ((or (numberp first-el) (endp first-el)) ())
+          ((listp first-el) (cons (find-and-remove first-el deep (+ it 1) range)
+                                  (find-and-remove (rest lst) deep it range))))))   
+        
+(defun remove-elements (n list) ; remove n elementos do inicio da lista
+  (if (> n 0) 
+      (remove-firsts n list)
+    (remove-lasts n list)))
+
+(defun remove-firsts (n list) ; remove n elementos do fim da lista
+  (cond ((eq n 0) list)
+         (t (remove-firsts (- n 1) (rest list)))))
+
+(defun remove-lasts (n list)
+  (cond ((eq n 0) list)
+        (t (remove-lasts (+ n 1) (butlast list)))))
+        
+
 
 
