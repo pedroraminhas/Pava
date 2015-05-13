@@ -85,4 +85,38 @@
         (t (remove-lasts (+ n 1) (butlast list)))))
         
 
+(defgeneric transpose-tensor (x))
+
+(defmethod transpose-tensor ((x vector-tensor))
+  (let ((x-element (slot-value x 'elements))
+         (result ()))
+        (loop for x in x-element
+            do (setf result (append result (list(list x)))))
+
+        (make-instance 'tensor :tensor-elements result)))
+
+(defmethod transpose-tensor ((x tensor))
+  (let ((x-elements (slot-value x 'elements)))
+        (make-instance 'tensor :tensor-elements (transpose-tensor-aux x-elements))))
+
+(defun transpose-tensor-aux (z)
+  (let ((result ())
+          (result-aux ())
+        (z-length (length z))
+        (row-length (length (car z))))
+        (progn (loop for x from 0 to (- row-length 1)
+                      do (progn (loop for y from 0 to (- z-length 1)
+                                     do (progn (setf result (append result (list (nth x (nth y z)))))))
+                                     (progn (setf result-aux (append result-aux (list result)))
+                                            (setf result (list)))))
+
+                                     
+        result-aux)))
+
+
+
+
+
+
+
 

@@ -6,3 +6,4 @@
 (load "print.lisp")
 (load "utils.lisp")
 (load "exercises.lisp")
+(load "dyadicOperators.lisp")
