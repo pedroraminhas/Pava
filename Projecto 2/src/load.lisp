@@ -1,6 +1,7 @@
 (load "CreateTensor.lisp")
 (load "functions.lisp")
 (load "monadicFunctions.lisp")
+(load "monadicOperators.lisp")
 (load "dyadicFunctions.lisp")
 (load "print.lisp")
 (load "utils.lisp")
