@@ -702,6 +702,30 @@
 						do (compare-scalar-tensor t1 y))))
 		results))
 
+(defgeneric  catenate (x y))
+
+(defmethod catenate ((x scalar) (y scalar))
+  (let ((t1 (slot-value x 'elements))
+        (t2 (slot-value y 'elements)))
+        (v t1 t2)))
+
+(defmethod catenate ((x vector-tensor) (y vector-tensor))
+  (let* ((t1 (slot-value x 'elements))
+         (t2 (slot-value y 'elements))
+         (merge (setf merge (append (car (list t1)) (append (car (list t2)))))))
+    (make-instance 'vector-tensor :tensor-elements merge)))
+
+(defmethod catenate ((x tensor) (y tensor))
+  (let* ((t1 (slot-value x 'elements))
+        (t2 (slot-value y 'elements))
+        (rank-t1 (length (tensor-dims t1)))
+        (rank-t2 (length (tensor-dims t2))))
+     (if (eq rank-t1 rank-t2)
+        (make-instance 'tensor :tensor-elements (find-and-insert (list t1) rank-t1 0 (list t2)))
+       (format t "ERROR LENGHT"))))
+		
+		
+
 
 
 

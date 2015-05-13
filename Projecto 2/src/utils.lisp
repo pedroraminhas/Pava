@@ -61,7 +61,15 @@
     (cond ((eq deep it) (remove-elements range lst))
           ((or (numberp first-el) (endp first-el)) ())
           ((listp first-el) (cons (find-and-remove first-el deep (+ it 1) range)
-                                  (find-and-remove (rest lst) deep it range))))))   
+                                  (find-and-remove (rest lst) deep it range))))))
+                                  
+(defun find-and-insert (lst deep it els)
+  (let ((first-el (car lst))
+        (first-el-els (car els)))
+    (cond ((eq deep it) (append lst els))
+          ((or (numberp first-el) (endp first-el)) ())
+          ((listp first-el) (cons (find-and-insert first-el deep (+ it 1) first-el-els)
+                                  (find-and-insert (rest lst) deep it (rest els)))))))  
         
 (defun remove-elements (n list) ; remove n elementos do inicio da lista
   (if (> n 0) 
