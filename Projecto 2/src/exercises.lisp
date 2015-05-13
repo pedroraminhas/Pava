@@ -1,3 +1,7 @@
+;Tally
+(defun tally (tensor)
+	(funcall (fold #'.*)(shape tensor)))
+
 ;Rank function
 (defun rank (tensor)
 	(s (length (slot-value (shape tensor) 'elements))))
