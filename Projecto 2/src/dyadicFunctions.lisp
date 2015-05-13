@@ -649,3 +649,61 @@
 					 for y in t2
 				do (setf result (append result-aux (list (select-list x y)))))))
 	result-aux))
+
+
+;Member
+
+(defgeneric member? (t1 t2))
+
+(defmethod member? ((t1 scalar) (t2 scalar))
+	(let ((t1-element (slot-value t1 'elements))
+		  (t2-element (slot-value t2 'elements)))
+			(s (equal-val t1-element t2-element))))
+
+
+(defmethod member? ((t1 tensor) (t2 tensor))
+	(let ((t1-element (slot-value t1 'elements))
+		  (t2-element (slot-value t2 'elements)))
+			(make-instance 'tensor :tensor-elements (member-aux t1-element t2-element))
+	))
+
+(defmethod member? ((t1 vector-tensor) (t2 tensor))
+	(let ((t1-element (slot-value t1 'elements))
+		  (t2-element (slot-value t2 'elements)))
+			(make-instance 'vector-tensor :tensor-elements (member-aux t1-element t2-element))
+	))
+
+(defmethod member? ((t1 scalar) (t2 tensor))
+	(let ((t1-elements (slot-value t1 'elements))
+		  (t2-elements (slot-value t2 'elements)))
+	(s (compare-scalar-tensor t1-elements t2-elements))))
+
+
+(defun member-aux (t1 t2)
+	(let ((result ()))
+		(cond ((not (listp (car t1))) (setf result (append result (compare-vector-tensor t1 t2))))
+			   (t (loop for x in t1
+			   		do  (setf result (append result (list (member-aux x t2)))
+		))))
+		result))
+
+(defun compare-vector-tensor (t1 t2)
+	(let ((result-aux ()))
+		(loop for x in t1
+			do (setf result-aux (append result-aux (list (compare-scalar-tensor x t2))))
+	)
+		result-aux))
+
+(defun compare-scalar-tensor (t1 t2)
+	(let ((results 0))
+		(cond ((not (listp (car t2))) (loop for y in t2
+											do (if (equal t1 y) (setf results 1))))
+				(t (loop for y in t2
+						do (compare-scalar-tensor t1 y))))
+		results))
+
+
+
+
+
+
