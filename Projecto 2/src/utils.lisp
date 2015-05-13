@@ -71,16 +71,16 @@
           ((listp first-el) (cons (find-and-insert first-el deep (+ it 1) first-el-els)
                                   (find-and-insert (rest lst) deep it (rest els)))))))  
         
-(defun remove-elements (n list) ; remove n elementos do inicio da lista
+(defun remove-elements (n list)
   (if (> n 0) 
       (remove-firsts n list)
     (remove-lasts n list)))
 
-(defun remove-firsts (n list) ; remove n elementos do fim da lista
+(defun remove-firsts (n list) ; remove n elementos do inicio da lista
   (cond ((eq n 0) list)
          (t (remove-firsts (- n 1) (rest list)))))
 
-(defun remove-lasts (n list)
+(defun remove-lasts (n list) ; remove n elementos do fim da lista
   (cond ((eq n 0) list)
         (t (remove-lasts (+ n 1) (butlast list)))))
         
