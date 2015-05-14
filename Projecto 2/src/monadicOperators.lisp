@@ -21,7 +21,7 @@
                                 (list (slot-value (funcall op (s i) 
                                                         (s (nth (- (length result) 1) result)))
                                             'elements)))))
-          (make-instance 'tensor :tensor-elements (list result)))))
+          (make-instance 'vector-tensor :tensor-elements result))))
 
 (defun outer-product (op)
   #'(lambda (lst tensor-cpy)
