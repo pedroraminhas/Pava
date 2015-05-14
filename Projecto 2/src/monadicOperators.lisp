@@ -43,6 +43,6 @@
         (let ((first-element (car lst)))
           (cond ((endp lst) ())
                 ((numberp first-element)                     
-                  (cons (funcall op (s value) (s first-element)) (fillw (rest lst) value)))
+                  (cons (slot-value (funcall op (s value) (s first-element)) 'elements) (fillw (rest lst) value)))
                 ((listp first-element) (cons (fillw first-element value) (fillw (rest lst) value)))))) (fillw lst value)))
 

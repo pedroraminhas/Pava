@@ -697,7 +697,8 @@
 (defun compare-scalar-tensor (t1 t2)
 	(let ((results 0))
 		(cond ((not (listp (car t2))) (loop for y in t2
-											do (if (equal t1 y) (setf results 1))))
+											do (if (equal t1 y) 
+																		(setf results 1))))
 				(t (loop for y in t2
 						do (compare-scalar-tensor t1 y))))
 		results))
