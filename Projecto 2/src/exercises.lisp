@@ -4,7 +4,12 @@
 
 ;Rank function
 (defun rank (tensor)
-	(s (length (slot-value (shape tensor) 'elements))))
+	(funcall (fold #'.+)(.and (shape tensor) (s 1))))
+
+;Within function
+(defun within (tensor scalar1 scalar2)
+	(select (.and (.>= tensor scalar1) (.<= tensor scalar2)) tensor))
+
 
 (defun primes ((x scalar))
   (let ((value (slot-value x 'elements)))
