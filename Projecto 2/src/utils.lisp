@@ -1,49 +1,3 @@
-(defparameter *current-value* -1)
-
-(defun current-value (seq)
-  (let ((result nil))
-  (if (eq *current-value* (- (length seq) 1))
-     (setf *current-value* 0)
-    (setf *current-value* (+ *current-value* 1)))
-  
-  (setf result (nth *current-value* seq))))
-
-
-(defun fillmatrix (lst seq)
-  (let ((first-element (car lst)))
-    (cond ((endp lst) ())
-          ((numberp first-element) (cons (current-value seq) (fillmatrix (rest lst) seq)))
-          ((listp first-element) (cons (fillmatrix first-element seq) (fillmatrix (rest lst) seq))))))
-
-(defun new-dimension (dim v seq)
-  (loop for x from 1 to dim 
-     collect (if (eq x 1) 
-                  v
-                  (fillmatrix v seq))))
-
-(defun without-last(lst)
-  (cond ((null lst) ())
-        ((null (cdr lst)) ())
-        (t (cons (car lst) (without-last (cdr lst))))))
-
-(defun make-tree-recursive (shape v seq)
-  (let* ((last-el (nth (- (length v) 1) v))
-         (new-dim ()))
-   
-    (if (not (endp shape))
-      (setf new-dim (new-dimension (nth (- (length shape) 1) shape)
-                         last-el
-                         seq)))
-
-    (if (endp shape)
-        ()
-    (cons new-dim
-          (make-tree-recursive (without-last shape)
-                                   (list new-dim)
-                                   seq)))))
-
-(defun make-tree (shape v seq)
-  (cons v (make-tree-recursive shape (list v) seq)))
 
 ;É número primo?
 (defun primep (value)
@@ -116,8 +70,27 @@
 
 
 
-
-
-
-
+(defun list-all (lst)
+  (let ((first-element (car lst)))
+  
+    (cond ((endp lst) ())
+          ((numberp first-element) (append (list first-element) (list-all (rest lst))))
+          ((listp first-element) (append (list-all first-element) (list-all (rest lst)))))))
+ 
+(defun fill-struct (struct elements)
+  (let ((els elements))
+    (defun fill-struct-els (struct)
+      (cond ((atom struct) (pop els))
+            ((null (cdr struct)) (list (fill-struct-els (car struct))))
+            (t (append (list (fill-struct-els (car struct)))
+                       (fill-struct-els (cdr struct))))))
+    (fill-struct-els struct)))
+ 
+(defun make-struct (dimensions cols rows)
+  (if (car dimensions)
+    (loop repeat (car dimensions) collect (make-struct (cdr dimensions) cols rows))
+    (loop repeat rows collect (make-list cols))))
+ 
+(defun make-circular (lst)
+  (setf (cdr (last lst)) lst))
 

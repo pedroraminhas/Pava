@@ -11,7 +11,7 @@
 	(select (.and (.>= tensor scalar1) (.<= tensor scalar2)) tensor))
 
 
-(defun primes ((x scalar))
+(defun primes (x)
   (let ((value (slot-value x 'elements)))
     (make-instance 'vector-tensor 
                    :tensor-elements (loop for x from 2 to value
