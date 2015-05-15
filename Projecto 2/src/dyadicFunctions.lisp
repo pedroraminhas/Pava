@@ -556,6 +556,7 @@
 			(if (equal t1-shape t2-shape) (make-instance 'vector-tensor :tensor-elements (and-val-tensor-tensor t1-elements t2-elements)) (error "Error: Tensors dont have the same size"))))
 			
 (defun reshape (new-shape elements)
+	(if (equal (length (slot-value new-shape 'elements)) 1) (reshape (v 1 (car (slot-value new-shape 'elements))) elements) 
   (let* ((new-shape (slot-value new-shape 'elements))
          (elements (slot-value elements 'elements))
          (size (last new-shape 2))
@@ -568,7 +569,7 @@
     (if (and (eq (length (tensor-dims final-solution)) 2)
              (eq (car (tensor-dims final-solution)) 1))
         (make-instance 'vector-tensor :tensor-elements (car final-solution))
-      (make-instance 'tensor :tensor-elements final-solution))))
+      (make-instance 'tensor :tensor-elements final-solution)))))
 
 
 (defgeneric drop (x y))

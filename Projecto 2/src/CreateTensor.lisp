@@ -16,7 +16,7 @@
 
 
 
-;Functions s, v and reshape
+;Functions s, v
 (defun s (y)
   (make-instance 'scalar :tensor-elements y))
 
