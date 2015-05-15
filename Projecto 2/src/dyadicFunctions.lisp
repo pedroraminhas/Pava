@@ -656,7 +656,8 @@
 	result))
 
 (defun select-list (t1 t2)
-	(let ((result-aux ()))
+	(let ((result-aux ())
+               (result ()))
 	(cond ((not (listp (car t2))) (loop for x in t1
 										for y in t2
 										do (if (not (equal x 0)) (setf result-aux (append result-aux (list y))))))
