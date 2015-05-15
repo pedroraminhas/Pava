@@ -1,11 +1,12 @@
 (defparameter *current-value* -1)
 
 (defun current-value (seq)
+  (let ((result nil))
   (if (eq *current-value* (- (length seq) 1))
      (setf *current-value* 0)
     (setf *current-value* (+ *current-value* 1)))
   
-  (setf result (nth *current-value* seq)))
+  (setf result (nth *current-value* seq))))
 
 
 (defun fillmatrix (lst seq)

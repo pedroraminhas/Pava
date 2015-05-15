@@ -1,7 +1,8 @@
 (defun fold (op)
   #'(lambda (x)
      (let* ((vec (slot-value x 'elements))
-           (result (setf result (car vec))))
+           (result ()))
+           (setf result (car vec))
        (loop for i in vec
              for y from 0
              when (> y 0)
@@ -12,7 +13,8 @@
 (defun scan (op)
   #'(lambda (x)
       (let* ((vec (slot-value x 'elements))
-            (result (setf result (append () (list (car vec))))))
+            (result ()))
+         (setf result (append () (list (car vec))))
          (loop for i in vec
                for y from 0
                when (> y 0)
