@@ -12,14 +12,19 @@
 
 
 (defun ravel (tensor)
-	(reshape (catenate (s 1) (funcall (fold #'.*) (shape tensor)))
-                 tensor)) 
+	(reshape (catenate (s 1) 
+                           (funcall (fold #'.*) 
+                                    (shape tensor)))
+		 tensor))
+
+(defun primes (scalar)
+  (funcall (fold #'.+) (reshape (catenate (s 1) scalar) (v 1))))
 
 
-(defun primes (x)
-  (let ((value (slot-value x 'elements)))
-    (make-instance 'vector-tensor 
-                   :tensor-elements (loop for x from 2 to value
-                                          when (primep x)
-                                          collect x))))
+;(defun primes (x)
+ ; (let ((value (slot-value x 'elements)))
+  ;  (make-instance 'vector-tensor 
+   ;                :tensor-elements (loop for x from 2 to value
+    ;                                      when (primep x)
+     ;                                     collect x))))
 

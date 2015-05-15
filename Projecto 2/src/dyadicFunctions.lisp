@@ -565,8 +565,9 @@
          (final-solution ()))
     (setf elements (list-all elements))
     (setf final-solution (fill-struct (make-struct struct cols rows) (make-circular elements)))
-    (if (not (listp (car final-solution)))
-        (make-instance 'vector-tensor :tensor-elements final-solution)
+    (if (and (eq (length (tensor-dims final-solution)) 2)
+             (eq (car (tensor-dims final-solution)) 1))
+        (make-instance 'vector-tensor :tensor-elements (car final-solution))
       (make-instance 'tensor :tensor-elements final-solution))))
 
 
