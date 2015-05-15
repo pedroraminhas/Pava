@@ -593,7 +593,7 @@
                                                          :tensor-elements (car (cdr vals))) y)
                                   (make-instance 'vector-tensor 
                                                  :tensor-elements nil)))
-        ((> (length vals) 2) (format t "RANK ERROR"))))) ; porque um vector só tem 1 dimensao
+        ((> (length vals) 2) (error "RANK ERROR"))))) ; porque um vector só tem 1 dimensao
 
 (defmethod drop ((x scalar) (y tensor))
   (let* ((value (slot-value x 'elements))
@@ -620,7 +620,7 @@
              for deep from 0 
              ;if (<= val-len (length (tensor-dims tensor-elements))) 
              do (setf solution (find-and-remove solution deep 0 range))))
-       (t (prog2 (format t "RANK ERROR") (setf solution nil))))
+       (t (error "RANK ERROR")))
 
       (make-instance 'tensor :tensor-elements solution)))
 
@@ -740,7 +740,7 @@
         (rank-t2 (length (tensor-dims t2))))
      (if (eq rank-t1 rank-t2)
         (make-instance 'tensor :tensor-elements (find-and-insert (list t1) rank-t1 0 (list t2)))
-       (format t "ERROR LENGHT"))))
+       (error "ERROR LENGHT"))))
 		
 		
 
