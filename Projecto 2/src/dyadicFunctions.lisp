@@ -585,8 +585,7 @@
                                              :tensor-elements (butlast tensor-elements)))))))
 
 (defmethod drop ((x vector-tensor) (y vector-tensor))
-  (let ((vals (slot-value x 'elements))
-        (tensor-elements (slot-value y 'elements)))
+  (let ((vals (slot-value x 'elements)))
     (cond ((endp vals)  y)
           ((eq (length vals) 1) (drop (make-instance 'scalar :tensor-elements (car vals)) y))
           ((eq (length vals) 2) (if (eq (car vals) 0)
@@ -729,8 +728,9 @@
 (defmethod catenate ((x vector-tensor) (y vector-tensor))
   (let* ((t1 (slot-value x 'elements))
          (t2 (slot-value y 'elements))
-         (merge (setf merge (append (car (list t1)) (append (car (list t2)))))))
-    (make-instance 'vector-tensor :tensor-elements merge)))
+         (merged ()))
+         (setf merged (append (car (list t1)) (append (car (list t2)))))
+    (make-instance 'vector-tensor :tensor-elements merged)))
 
 (defmethod catenate ((x tensor) (y tensor))
   (let* ((t1 (slot-value x 'elements))
