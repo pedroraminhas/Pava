@@ -11,6 +11,11 @@
 	(select (.and (.>= tensor scalar1) (.<= tensor scalar2)) tensor))
 
 
+(defun ravel (tensor)
+	(reshape (catenate (s 1) (funcall (fold #'.*) (shape tensor)))
+                 tensor)) 
+
+
 (defun primes (x)
   (let ((value (slot-value x 'elements)))
     (make-instance 'vector-tensor 
